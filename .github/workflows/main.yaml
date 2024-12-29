@@ -23,7 +23,7 @@ jobs:
     - name: Log in to Google Cloud with Workload Identity Federation
       uses: google-github-actions/auth@v2
       with:
-        workload_identity_provider: projects/gcptest-445516/locations/global/workloadIdentityPools/my-workload-identity-pool/providers/my-oidc-provider
+        workload_identity_provider: projects/gcptest-445516/locations/global/workloadIdentityPools/my-workload-identity-pool1/providers/my-oidc-provider1
         service_account: workload-identity-sa@gcptest-445516.iam.gserviceaccount.com
 
     - name: Check Workload Identity Pool and Provider Existence
@@ -33,14 +33,14 @@ jobs:
         gcloud config set project gcptest-445516
 
         # Check if the workload identity pool exists
-        gcloud iam workload-identity-pools describe my-workload-identity-pool \
+        gcloud iam workload-identity-pools describe my-workload-identity-pool1 \
           --location global --project gcptest-445516 || { echo "Workload Identity Pool does not exist."; exit 1; }
 
         # Check if the OIDC provider exists
         echo "Checking if OIDC provider exists..."
-        gcloud iam workload-identity-pools providers describe my-oidc-provider \
+        gcloud iam workload-identity-pools providers describe my-oidc-provider1 \
           --location global \
-          --workload-identity-pool my-workload-identity-pool \
+          --workload-identity-pool my-workload-identity-pool1 \
           --project gcptest-445516 || { echo "OIDC Provider does not exist."; exit 1; }
 
     - name: Build Docker image
@@ -61,4 +61,3 @@ jobs:
           --platform managed \
           --region us-central1 \
           --allow-unauthenticated
-##
