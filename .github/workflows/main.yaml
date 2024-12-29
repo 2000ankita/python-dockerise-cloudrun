@@ -25,6 +25,14 @@ jobs:
       with:
         workload_identity_provider: projects/gcptest-445516/locations/global/workloadIdentityPools/my-workload-identity-pool1/providers/my-oidc-provider1
         service_account: workload-identity-sa@gcptest-445516.iam.gserviceaccount.com
+        create_credentials_file: true
+        export_environment_variables: true
+        universe: googleapis.com
+        cleanup_credentials: true
+        access_token_lifetime: 3600s
+        access_token_scopes: https://www.googleapis.com/auth/cloud-platform
+        id_token_include_email: false
+
 
     - name: Check Workload Identity Pool and Provider Existence
       run: |
