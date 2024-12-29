@@ -28,12 +28,12 @@ jobs:
         service_account_key: ${{ secrets.GOOGLE_CLOUD_KEY_JSON }}  # Ensure correct service account JSON key in secrets
 
     - name: Authenticate Docker with Artifact Registry using docker login
-  run: |
-    # Activate the service account using the JSON key
-    echo "${{ secrets.GOOGLE_CLOUD_KEY_JSON }}" | gcloud auth activate-service-account --key-file=-
+      run: |
+        # Activate the service account using the JSON key
+        echo "${{ secrets.GOOGLE_CLOUD_KEY_JSON }}" | gcloud auth activate-service-account --key-file=-
 
-    # Authenticate Docker to use the Artifact Registry
-    docker login -u _json_key -p "$(gcloud auth application-default print-access-token)" https://us-docker.pkg.dev
+        # Authenticate Docker to use the Artifact Registry
+        docker login -u _json_key -p "$(gcloud auth application-default print-access-token)" https://us-docker.pkg.dev
 
 
     - name: Build Docker image
