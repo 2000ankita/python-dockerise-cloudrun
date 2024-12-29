@@ -20,6 +20,21 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
 
+    - name: Check Workload Identity Pool and Provider Existence
+      run: |
+        # Check if the workload identity pool exists
+        echo "Checking if workload identity pool exists..."
+        gcloud iam workload-identity-pools describe my-workload-identity-pool \
+          --location global \
+          --project gcptest-445516 || { echo "Workload Identity Pool does not exist."; exit 1; }
+
+        # Check if the OIDC provider exists
+        echo "Checking if OIDC provider exists..."
+        gcloud iam workload-identity-pools providers describe my-oidc-provider \
+          --location global \
+          --workload-identity-pool my-workload-identity-pool \
+          --project gcptest-445516 || { echo "OIDC Provider does not exist."; exit 1; }
+
     - name: Log in to Google Cloud with Workload Identity Federation
       uses: google-github-actions/auth@v2
       with:
