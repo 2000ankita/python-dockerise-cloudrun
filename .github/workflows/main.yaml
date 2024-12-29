@@ -20,27 +20,23 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
 
-    - name: Log in to Google Cloud with Workload Identity Federation
-      uses: google-github-actions/auth@v2
-      with:
-        workload_identity_provider: projects/gcptest-445516/locations/global/workloadIdentityPools/my-workload-identity-pool1/providers/my-oidc-provider1
-        service_account: workload-identity-sa@gcptest-445516.iam.gserviceaccount.com
-        create_credentials_file: true
-        export_environment_variables: true
-        universe: googleapis.com
-        cleanup_credentials: true
-        access_token_lifetime: 3600s
-        access_token_scopes: https://www.googleapis.com/auth/cloud-platform
-        id_token_include_email: false
-
+    - name: Authenticate with Google Cloud using gcloud
+      run: |
+        # Install gcloud
+        curl -sSL https://sdk.cloud.google.com | bash
+        source $HOME/google-cloud-sdk/path.bash.inc
+        
+        # Authenticate using the service account key stored in GitHub Secrets
+        echo "${{ secrets.GOOGLE_CLOUD_KEY_JSON }}" > $HOME/gcloud-key.json
+        gcloud auth activate-service-account --key-file=$HOME/gcloud-key.json
+        
+        # Set the project to use
+        gcloud config set project gcptest-445516
 
     - name: Check Workload Identity Pool and Provider Existence
       run: |
-        # Ensure authentication using the workload identity provider
+        # Ensure authentication using gcloud
         echo "Checking if workload identity pool exists..."
-        gcloud config set project gcptest-445516
-
-        # Check if the workload identity pool exists
         gcloud iam workload-identity-pools describe my-workload-identity-pool1 \
           --location global --project gcptest-445516 || { echo "Workload Identity Pool does not exist."; exit 1; }
 
