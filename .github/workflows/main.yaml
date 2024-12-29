@@ -24,7 +24,7 @@ jobs:
       uses: google-github-actions/setup-gcloud@v1
       with:
         project_id: gcptest-445516
-        service_account_key: ${{ secrets.GOOGLE_CLOUD_KEY_JSON }}
+        service_account_key: ${{ secrets.GOOGLE_CLOUD_KEY_JSON }}  # Service account key for 'first-svc-account'
 
     - name: Authenticate Docker with Artifact Registry
       run: gcloud auth configure-docker us-docker.pkg.dev
@@ -47,4 +47,3 @@ jobs:
           --platform managed \
           --region us-central1 \
           --allow-unauthenticated
-##
