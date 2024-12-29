@@ -5,6 +5,10 @@ on:
     branches:
       - dev  # Trigger on pushes to the main branch
 
+permissions:
+  contents: read  # Allows read access to repository contents
+  id-token: write  # Allows the action to generate an ID token
+
 jobs:
   build:
     runs-on: ubuntu-latest
